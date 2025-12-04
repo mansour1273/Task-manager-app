@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دفتر مهندسی طرح‌ها</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #e74c3c;
+            --info: #0984e3;
+        }
+        
+        body { 
+            font-family: 'Tahoma', sans-serif; 
+            background: linear-gradient(135deg, #f0f4f8, #d9e2ec); 
+            margin: 0; 
+            direction: rtl; 
+            padding-bottom: 80px; 
+        }
+        
+        header { 
+            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
+            color: #fff; 
+            padding: 20px; 
+            text-align: center; 
+            font-size: 1.6em; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            z-index: 1000; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        
+        .home-container { 
+            padding-top: 100px; 
+        }
+        
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 20px; 
+        }
+        
+        .card { 
+            background: linear-gradient(135deg, var(--success), #00cec9); 
+            color: #fff; 
+            padding: 30px 20px; 
+            text-align: center; 
+            border-radius: 20px; 
+            cursor: pointer; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15); 
+            transition: all 0.3s ease; 
+            position: relative; 
+            overflow: hidden; 
+        }
+        
+        .card::before { 
+            content: ''; 
+            position: absolute; 
+            top: 0; 
+            left: -100%; 
+            width: 100%; 
+            height: 100%; 
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); 
+            transition: left 0.5s; 
+        }
+        
+        .card:hover { 
+            transform: translateY(-10px) scale(1.02); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+        }
+        
+        .card:hover::before { 
+            left: 100%; 
+        }
+        
+        .card i { 
+            font-size: 3em; 
+            margin-bottom: 15px; 
+            display: block; 
+        }
+        
+        .card.small { 
+            background: linear-gradient(135deg, var(--info), #74b9ff); 
+            padding: 20px; 
+        }
+        
+        .page { 
+            display: none; 
+            background: #fff; 
+            padding: 25px; 
+            border-radius: 20px; 
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1); 
+            margin-top: 100px; 
+            animation: fadeIn 0.5s ease; 
+        }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
+        .back { 
+            background: linear-gradient(135deg, #555, #666); 
+            color: #fff; 
+            padding: 12px 20px; 
+            border: none; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            margin-bottom: 20px; 
+            transition: background 0.3s; 
+            position: relative; 
+            z-index: 100; 
+        }
+        
+        .back:hover { 
+            background: linear-gradient(135deg, #444, #555); 
+        }
+        
+        input, select, textarea, button { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 8px 0; 
+            border-radius: 10px; 
+            border: 1px solid #ddd; 
+            font-size: 1em; 
+            box-sizing: border-box; 
+        }
+        
+        button { 
+            background: linear-gradient(135deg, var(--info), #74b9ff); 
+            color: #fff; 
+            border: none; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+        }
+        
+        button:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
+        }
+        
+        .item { 
+            background: linear-gradient(135deg, var(--warning), #fdcb6e); 
+            padding: 15px; 
+            border-radius: 12px; 
+            margin: 12px 0; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            transition: all 0.3s; 
+            position: relative; 
+        }
+        
+        .item.urgent {
+            background: linear-gradient(135deg, #e74c3c, #fd79a8);
+            border: 2px solid #ff0000;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+        
+        .item.done { 
+            background: linear-gradient(135deg, #dff9fb, #b2e4e6); 
+            text-decoration: line-through; 
+            opacity: 0.8; 
+        }
+        
+        .item.meet { 
+            background: linear-gradient(135deg, var(--secondary), #fd79a8); 
+            color: #fff; 
+        }
+        
+        .item.up { 
+            background: linear-gradient(135deg, #e17055, #fd79a8); 
+        }
+        
+        .small { 
+            font-size: 0.85em; 
+            opacity: 0.9; 
+        }
+        
+        .att a { 
+            color: var(--info); 
+            font-weight: bold; 
+            text-decoration: none; 
+        }
+        
+        .att a:hover { 
+            text-decoration: underline; 
+        }
+        
+        /* فیلتر جمع شده در دراپ‌داون */
+        .filter-dropdown {
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        .filter-toggle {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 200px;
+        }
+        
+        .filter-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            width: 300px;
+            z-index: 1000;
+            margin-top: 5px;
+        }
+        
+        .filter-content.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .filter-group {
+            margin-bottom: 15px;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        h3 { 
+            color: var(--primary); 
+            border-bottom: 2px solid var(--secondary); 
+            padding-bottom: 10px; 
+            margin-top: 0; 
+        }
+        
+        .item-buttons { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 5px; 
+            min-width: 100px; 
+        }
+        
+        .item-content { 
+            flex: 1; 
+            padding-left: 15px; 
+        }
+        
+        /* استایل‌های جدید */
+        .emp-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            margin-left: 10px;
+        }
+        
+        .emp-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .emp-details {
+            flex: 1;
+        }
+        
+        .emp-phone {
+            font-size: 0.85em;
+            color: #555;
+            margin-top: 3px;
+        }
+        
+        .emp-internal {
+            font-size: 0.85em;
+            color: #777;
+        }
+        
+        .task-emp-info {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        
+        .task-emp-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 8px;
+            border: 2px solid #fff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        
+        .category-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin: 3px;
+        }
+        
+        .urgent-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #e74c3c, #ff7675);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin: 3px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .avatar-upload {
+            position: relative;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        
+        .avatar-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ddd;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .avatar-preview:hover {
+            transform: scale(1.05);
+            border-color: var(--primary);
+        }
+        
+        .avatar-input {
+            display: none;
+        }
+        
+        .category-filter {
+            background: linear-gradient(135deg, #dfe6e9, #b2bec3);
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+            border: none;
+            margin: 5px;
+        }
+        
+        .category-filter.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 3px 10px rgba(108, 92, 231, 0.3);
+        }
+        
+        .category-filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        
+        .emp-card {
+            background: linear-gradient(135deg, var(--info), #74b9ff);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(9, 132, 227, 0.1);
+        }
+        
+        .file-size-warning {
+            font-size: 0.8em;
+            color: var(--danger);
+            margin-top: 5px;
+        }
+        
+        .preview-btn {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            margin-top: 5px;
+            font-size: 0.85em;
+        }
+        
+        .preview-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(46, 204, 113, 0.3);
+        }
+        
+        /* داشبورد با نمودار کلیک‌شدنی */
+        .dashboard-chart {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .dashboard-chart:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .chart-toggle {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .chart-container {
+            max-height: 300px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .chart-container.collapsed {
+            max-height: 0;
+        }
+        
+        .urgent-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            padding: 10px;
+            background: #fff3cd;
+            border-radius: 10px;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .notification-settings {
+            background: #e8f4fc;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #74b9ff;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalFade 0.3s ease;
+        }
+        
+        @keyframes modalFade {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-row > * {
+            flex: 1;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .checkbox-group label {
+            margin: 0;
+        }
+        
+        /* هشدار فوری */
+        .urgent-alert {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, #e74c3c, #ff7675);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.3);
+            z-index: 1500;
+            display: none;
+            animation: slideIn 0.5s ease;
+            max-width: 300px;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .urgent-alert.show {
+            display: block;
+        }
+        
+        .urgent-alert-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .urgent-alert-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .urgent-alert-buttons button {
+            flex: 1;
+            padding: 8px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<header><i class="fas fa-tools"></i> دفتر مهندسی طرح‌ها</header>
+
+<!-- هشدار فوری -->
+<div id="urgentAlert" class="urgent-alert">
+    <div class="urgent-alert-content">
+        <strong><i class="fas fa-exclamation-triangle"></i> کار فوری!</strong>
+        <div id="alertMessage"></div>
+        <div class="urgent-alert-buttons">
+            <button onclick="markAsDone()" style="background: linear-gradient(135deg, #00b894, #00cec9);">
+                <i class="fas fa-check"></i> انجام شد
+            </button>
+            <button onclick="closeAlert()" style="background: linear-gradient(135deg, #555, #666);">
+                <i class="fas fa-times"></i> بستن
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="container home-container" id="home">
+    <!-- داشبورد با نمودار کلیک‌شدنی -->
+    <div class="dashboard-chart" id="dashboardChart">
+        <div class="chart-header">
+            <h3 style="margin: 0; color: var(--primary);">
+                <i class="fas fa-chart-bar"></i> آمار کلی کارها
+            </h3>
+            <button class="chart-toggle" onclick="toggleChart()">
+                <i class="fas fa-chevron-down"></i> نمایش نمودار
+            </button>
+        </div>
+        <div class="chart-container" id="mainChartContainer">
+            <canvas id="mainChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+    
+    <div class="grid">
+        <div class="card" onclick="goTo('tasks')"><i class="fas fa-tasks"></i><br>مدیریت کارها</div>
+        <div class="card" onclick="goTo('meetings')"><i class="fas fa-calendar-alt"></i><br>جلسات</div>
+        <div class="card" onclick="goTo('chart')"><i class="fas fa-chart-pie"></i><br>گزارش‌های پیشرفته</div>
+        <div class="card small" onclick="goTo('emps')"><i class="fas fa-users-cog"></i><br>همکاران</div>
+    </div>
+</div>
+
+<!-- کارها -->
+<div class="container page" id="tasks" style="display: none;">
+    <button class="back" onclick="goTo('home')"><i class="fas fa-arrow-right"></i> بازگشت</button>
+    <h3><i class="fas fa-plus-circle"></i> کار جدید</h3>
+    
+    <div class="form-row">
+        <div>
+            <input type="text" id="t1" placeholder="عنوان کار">
+        </div>
+        <div>
+            <select id="t2"></select>
+        </div>
+    </div>
+    
+    <textarea id="t3" placeholder="توضیحات کامل" rows="4"></textarea>
+    
+    <div class="form-row">
+        <div>
+            <label>دسته‌بندی:</label>
+            <select id="t6">
+                <option value="">انتخاب کنید</option>
+                <option value="فنی">فنی</option>
+                <option value="اداری">اداری</option>
+                <option value="مالی">مالی</option>
+                <option value="فروش">فروش</option>
+                <option value="پشتیبانی">پشتیبانی</option>
+                <option value="طراحی">طراحی</option>
+                <option value="تحقیق">تحقیق</option>
+            </select>
+        </div>
+        <div>
+            <label>اولویت:</label>
+            <select id="t8">
+                <option value="عادی">عادی</option>
+                <option value="متوسط">متوسط</option>
+                <option value="بالا">بالا</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div>
+            <label>تاریخ شروع:</label>
+            <input type="date" id="t4">
+        </div>
+        <div>
+            <label>تاریخ پایان:</label>
+            <input type="date" id="t7">
+        </div>
+    </div>
+    
+    <div class="urgent-checkbox">
+        <input type="checkbox" id="t9" onchange="toggleNotificationSettings()">
+        <label for="t9" style="color: #e74c3c; font-weight: bold;">
+            <i class="fas fa-exclamation-triangle"></i> کار فوری (اعلان با صدا و لرزش)
+        </label>
+    </div>
+    
+    <div class="notification-settings" id="notificationSettings" style="display: none;">
+        <h4><i class="fas fa-bell"></i> تنظیمات اعلان کار فوری</h4>
+        <div class="form-row">
+            <div>
+                <label>تاریخ اعلان:</label>
+                <input type="date" id="t10">
+            </div>
+            <div>
+                <label>ساعت اعلان:</label>
+                <input type="time" id="t11">
+            </div>
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="t12" checked>
+            <label for="t12">صدا</label>
+            <input type="checkbox" id="t13" checked>
+            <label for="t13">لرزش</label>
+        </div>
+    </div>
+    
+    <div>
+        <label>پیوست:</label>
+        <input type="file" id="t5" accept="image/*,.pdf,.doc,.docx,.txt">
+        <small class="file-size-warning">حداکثر حجم: 2MB</small>
+    </div>
+    
+    <button onclick="saveTask()"><i class="fas fa-save"></i> ذخیره کار</button>
+    
+    <!-- فیلتر دراپ‌داون -->
+    <div class="filter-dropdown">
+        <button class="filter-toggle" onclick="toggleFilter()">
+            <span>فیلترها</span>
+            <i class="fas fa-filter"></i>
+        </button>
+        <div class="filter-content" id="filterContent">
+            <div class="filter-group">
+                <label>همکار:</label>
+                <select id="f1" onchange="applyFilters()">
+                    <option value="">همه همکاران</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>وضعیت:</label>
+                <select id="f2" onchange="applyFilters()">
+                    <option value="">همه وضعیت</option>
+                    <option value="1">انجام شده</option>
+                    <option value="0">در حال انجام</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>دسته‌بندی:</label>
+                <select id="f3" onchange="applyFilters()">
+                    <option value="">همه دسته‌بندی</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>اولویت:</label>
+                <select id="f4" onchange="applyFilters()">
+                    <option value="">همه اولویت‌ها</option>
+                    <option value="عادی">عادی</option>
+                    <option value="متوسط">متوسط</option>
+                    <option value="بالا">بالا</option>
+                </select>
+            </div>
+            <button onclick="resetFilters()" style="background: linear-gradient(135deg, #555, #666); margin-top: 10px;">
+                <i class="fas fa-redo"></i> بازنشانی فیلترها
+            </button>
+        </div>
+    </div>
+    
+    <div class="category-filters" id="dateFilters">
+        <button class="category-filter active" onclick="filterByDate('all')">همه</button>
+        <button class="category-filter" onclick="filterByDate('today')">امروز</button>
+        <button class="category-filter" onclick="filterByDate('week')">این هفته</button>
+        <button class="category-filter" onclick="filterByDate('month')">این ماه</button>
+        <button class="category-filter" onclick="filterByDate('past')">گذشته</button>
+        <button class="category-filter" onclick="filterByDate('future')">آینده</button>
+        <button class="category-filter" onclick="filterByDate('urgent')">فوری</button>
+    </div>
+    
+    <div id="tasklist"></div>
+</div>
+
+<!-- جلسات -->
+<div class="container page" id="meetings" style="display: none;">
+    <button class="back" onclick="goTo('home')"><i class="fas fa-arrow-right"></i> بازگشت</button>
+    <h3><i class="fas fa-plus-circle"></i> جلسه جدید</h3>
+    
+    <input type="text" id="m1" placeholder="موضوع جلسه">
+    
+    <div class="form-row">
+        <input type="date" id="m2">
+        <input type="time" id="m3">
+    </div>
+    
+    <input type="text" id="m4" placeholder="محل برگزاری">
+    <textarea id="m5" placeholder="یادداشت" rows="3"></textarea>
+    
+    <div>
+        <label>پیوست جلسه:</label>
+        <input type="file" id="m6" accept="image/*,.pdf,.doc,.docx">
+    </div>
+    
+    <div class="checkbox-group">
+        <input type="checkbox" id="m7" checked>
+        <label for="m7">یادآوری ۱۵ دقیقه قبل</label>
+    </div>
+    
+    <button onclick="saveMeet()"><i class="fas fa-save"></i> ذخیره جلسه</button>
+    
+    <h3 style="margin-top: 30px;"><i class="fas fa-list"></i> لیست جلسات</h3>
+    <div id="meetlist"></div>
+</div>
+
+<!-- همکاران -->
+<div class="container page" id="emps" style="display: none;">
+    <button class="back" onclick="goTo('home')"><i class="fas fa-arrow-right"></i> بازگشت</button>
+    <h3><i class="fas fa-user-plus"></i> افزودن همکار جدید</h3>
+    
+    <div class="emp-card">
+        <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px;">
+            <div class="avatar-upload">
+                <img id="avatarPreview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%2374b9ff' rx='40'/%3E%3Ctext x='50%25' y='50%25' dy='.3em' text-anchor='middle' fill='white' font-family='Tahoma' font-size='24'%3Eتصویر%3C/text%3E%3C/svg%3E" 
+                     class="avatar-preview" onclick="document.getElementById('avatarInput').click()">
+                <input type="file" id="avatarInput" class="avatar-input" accept="image/*" onchange="previewAvatar(event)">
+            </div>
+            <div style="flex: 1;">
+                <input type="text" id="e1" placeholder="نام و نام خانوادگی">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <input type="tel" id="e2" placeholder="شماره موبایل">
+            <input type="text" id="e3" placeholder="شماره داخلی">
+        </div>
+        
+        <input type="email" id="e4" placeholder="ایمیل (اختیاری)">
+        <textarea id="e5" placeholder="توضیحات (اختیاری)" rows="2"></textarea>
+        
+        <div class="file-size-warning">
+            <i class="fas fa-exclamation-triangle"></i> حجم تصویر حداکثر 500KB
+        </div>
+        
+        <button onclick="addEmp()" style="width: auto; padding: 12px 30px;">
+            <i class="fas fa-user-plus"></i> افزودن همکار
+        </button>
+    </div>
+    
+    <h3 style="margin-top: 30px;"><i class="fas fa-users"></i> لیست همکاران</h3>
+    <div id="emplist"></div>
+</div>
+
+<!-- گزارش‌های پیشرفته -->
+<div class="container page" id="chart" style="display: none;">
+    <button class="back" onclick="goTo('home')"><i class="fas fa-arrow-right"></i> بازگشت</button>
+    <h3><i class="fas fa-chart-bar"></i> گزارش‌های عملکرد</h3>
+    
+    <div class="chart-container" style="margin-bottom: 30px;">
+        <h4><i class="fas fa-user-chart"></i> عملکرد همکاران</h4>
+        <select id="c1" onchange="drawPerformanceChart()" style="margin-bottom: 20px;"></select>
+        <canvas id="performanceChart" width="400" height="200"></canvas>
+    </div>
+    
+    <div class="chart-container" style="margin-bottom: 30px;">
+        <h4><i class="fas fa-chart-pie"></i> توزیع کارها بر اساس دسته‌بندی</h4>
+        <canvas id="categoryChart" width="400" height="200"></canvas>
+    </div>
+    
+    <div class="chart-container">
+        <h4><i class="fas fa-tachometer-alt"></i> وضعیت کارها</h4>
+        <canvas id="statusChart" width="400" height="200"></canvas>
+    </div>
+</div>
+
+<!-- مودال پیش‌نمایش -->
+<div id="previewModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <h3 id="modalTitle">پیش‌نمایش</h3>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jalaali-js@1.1.5/dist/jalaali.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+// داده‌ها
+let emps = JSON.parse(localStorage.getItem('emps')) || [
+    {
+        id: 1,
+        name: 'علی رضایی',
+        phone: '09123456789',
+        internal: '101',
+        email: '',
+        notes: '',
+        avatar: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22 viewBox=%220 0 50 50%22%3E%3Crect width=%2250%22 height=%2250%22 fill=%22%2300b894%22 rx=%2225%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dy=%22.3em%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Tahoma%22 font-size=%2220%22%3Eع%3C/text%3E%3C/svg%3E'
+    },
+    {
+        id: 2,
+        name: 'محمد حسینی',
+        phone: '09129876543',
+        internal: '102',
+        email: '',
+        notes: '',
+        avatar: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22 viewBox=%220 0 50 50%22%3E%3Crect width=%2250%22 height=%2250%22 fill=%22%230984e3%22 rx=%2225%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dy=%22.3em%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Tahoma%22 font-size=%2220%22%3Eم%3C/text%3E%3C/svg%3E'
+    },
+    {
+        id: 3,
+        name: 'زهرا محمدی',
+        phone: '09127778899',
+        internal: '103',
+        email: '',
+        notes: '',
+        avatar: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22 viewBox=%220 0 50 50%22%3E%3Crect width=%2250%22 height=%2250%22 fill=%22%23fdcb6e%22 rx=%2225%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dy=%22.3em%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Tahoma%22 font-size=%2220%22%3Eز%3C/text%3E%3C/svg%3E'
+    }
+];
+
+let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+let meets = JSON.parse(localStorage.getItem('meets')) || [];
+let urgentTasks = JSON.parse(localStorage.getItem('urgentTasks')) || [];
+let editingTaskIndex = -1;
+let editingEmpIndex = -1;
+let currentDateFilter = 'all';
+let mainChart = null;
+let performanceChart = null;
+let categoryChart = null;
+let statusChart = null;
+let currentUrgentTaskId = null;
+let audioContext = null;
+
+// تابع تبدیل فایل به Base64
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+}
+
+// پیش‌نمایش آواتار
+function previewAvatar(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    if (file.size > 500 * 1024) {
+        alert('حجم فایل باید کمتر از ۵۰۰ کیلوبایت باشد!');
+        event.target.value = '';
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('avatarPreview').src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+// نمایش مودال
+function showModal(title, content) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalContent').innerHTML = content;
+    document.getElementById('previewModal').style.display = 'flex';
+}
+
+// بستن مودال
+function closeModal() {
+    document.getElementById('previewModal').style.display = 'none';
+}
+
+// پخش صدای اعلان
+function playNotificationSound() {
+    try {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
+        
+        oscillator.start(aContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 1);
+        
+        console.log('صدا پخش شد');
+    } catch (e) {
+        console.log('خطا در پخش صدا:', e);
+    }
+}
+
+// لرزش
+function vibrate() {
+    if (navigator.vibrate) {
+        navigator.vibrate([200, 100, 200, 100, 200]);
+        console.log('لرزش فعال شد');
+    }
+}
+
+// نمایش هشدار فوری
+function showUrgentAlert(taskName, empName, taskId) {
+    const alert = document.getElementById('urgentAlert');
+    const message = document.getElementById('alertMessage');
+    
+    message.textContent = `کار "${taskName}" انجام نشده است توسط ${empName}`;
+    currentUrgentTaskId = taskId;
+    
+    alert.classList.add('show');
+    
+    // پخش صدا و لرزش
+    playNotificationSound();
+    vibrate();
+    
+    // بستن خودکار بعد از 30 ثانیه
+    setTimeout(() => {
+        if (alert.classList.contains('show')) {
+            closeAlert();
+        }
+    }, 30000);
+}
+
+// بستن هشدار
+function closeAlert() {
+    document.getElementById('urgentAlert').classList.remove('show');
+    currentUrgentTaskId = null;
+}
+
+// علامت‌گذاری کار به عنوان انجام شده
+function markAsDone() {
+    if (currentUrgentTaskId) {
+        const taskIndex = tasks.findIndex(t => t.id === currentUrgentTaskId);
+        if (taskIndex !== -1) {
+            tasks[taskIndex].done = true;
+            tasks[taskIndex].urgent = false;
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            listTasks();
+            updateDashboard();
+            console.log('کار فوری به انجام شده تغییر وضعیت داد');
+        }
+    }
+    closeAlert();
+}
+
+// بررسی اعلان‌های فوری
+function checkUrgentTasks() {
+    const now = new Date();
+    
+    tasks.forEach(task => {
+        if (task.urgent && !task.done && task.notificationDate && task.notificationTime) {
+            const notificationDateTime = new Date(`${task.notificationDate}T${task.notificationTime}`);
+            
+            // بررسی اگر زمان اعلان رسیده باشد
+            if (notificationDateTime <= now) {
+                // بررسی اگر قبلا هشدار داده نشده باشد
+                const alreadyAlerted = urgentTasks.some(ut => ut.taskId === task.id && 
+                    new Date(ut.alertTime).toDateString() === now.toDateString());
+                
+                if (!alreadyAlerted) {
+                    // نمایش هشدار
+                    showUrgentAlert(task.name, task.emp, task.id);
+                    
+                    // ذخیره در تاریخچه هشدارها
+                    urgentTasks.push({
+                        taskId: task.id,
+                        alertTime: now.toISOString(),
+                        shown: true
+                    });
+                    localStorage.setItem('urgentTasks', JSON.stringify(urgentTasks));
+                }
+            }
+        }
+    });
+}
+
+// اجرای بررسی هر 30 ثانیه
+setInterval(checkUrgentTasks, 30000);
+
+// تابع اصلی نمایش صفحه
+function goTo(page) {
+    document.querySelectorAll('#home, .page').forEach(el => {
+        el.style.display = 'none';
+        el.classList.remove('home-container');
+    });
+    
+    if (page === 'home') {
+        const home = document.getElementById('home');
+        home.style.display = 'block';
+        home.classList.add('home-container');
+        updateDashboard();
+        drawMainChart();
+    } else {
+        document.getElementById(page).style.display = 'block';
+    }
+    
+    if (page === 'tasks') { 
+        fillEmps(); 
+        fillCategories();
+        fillPriorityFilter();
+        listTasks(); 
+        editingTaskIndex = -1;
+        document.getElementById('tasks').querySelector('h3').innerHTML = '<i class="fas fa-plus-circle"></i> کار جدید';
+    }
+    if (page === 'emps') { 
+        listEmps(); 
+        editingEmpIndex = -1;
+        document.getElementById('emps').querySelector('h3').innerHTML = '<i class="fas fa-user-plus"></i> افزودن همکار جدید';
+    }
+    if (page === 'meetings') { listMeets(); }
+    if (page === 'chart') { 
+        fillEmps(); 
+        drawCharts(); 
+    }
+}
+
+// مدیریت نمایش تنظیمات اعلان
+function toggleNotificationSettings() {
+    const urgentChecked = document.getElementById('t9').checked;
+    document.getElementById('notificationSettings').style.display = urgentChecked ? 'block' : 'none';
+    
+    // تنظیم تاریخ و ساعت پیش‌فرض
+    if (urgentChecked) {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('t10').valueAsDate = tomorrow;
+        document.getElementById('t11').value = '09:00';
+    }
+}
+
+// toggle فیلتر دراپ‌داون
+function toggleFilter() {
+    const filterContent = document.getElementById('filterContent');
+    filterContent.classList.toggle('show');
+}
+
+// اعمال فیلترها
+function applyFilters() {
+    listTasks();
+    // بستن دراپ‌داون
+    document.getElementById('filterContent').classList.remove('show');
+}
+
+// بازنشانی فیلترها
+function resetFilters() {
+    document.getElementById('f1').value = '';
+    document.getElementById('f2').value = '';
+    document.getElementById('f3').value = '';
+    document.getElementById('f4').value = '';
+    applyFilters();
+}
+
+// toggle نمودار داشبورد
+function toggleChart() {
+    const container = document.getElementById('mainChartContainer');
+    const toggleBtn = document.querySelector('.chart-toggle');
+    const icon = toggleBtn.querySelector('i');
+    
+    container.classList.toggle('collapsed');
+    
+    if (container.classList.contains('collapsed')) {
+        toggleBtn.innerHTML = '<i class="fas fa-chevron-up"></i> نمایش نمودار';
+    } else {
+        toggleBtn.innerHTML = '<i class="fas fa-chevron-down"></i> بستن نمودار';
+    }
+}
+
+// آپدیت داشبورد و نمودار
+function updateDashboard() {
+    drawMainChart();
+}
+
+// رسم نمودار اصلی در داشبورد
+function drawMainChart() {
+    const ctx = document.getElementById('mainChart').getContext('2d');
+    
+    if (mainChart) {
+        mainChart.destroy();
+    }
+    
+    const totalTasks = tasks.length;
+    const completedTasks = tasks.filter(t => t.done).length;
+    const pendingTasks = tasks.filter(t => !t.done).length;
+    const urgentTasksCount = tasks.filter(t => t.urgent && !t.done).length;
+    
+    mainChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['کل کارها', 'انجام شده', 'در حال انجام', 'فوری'],
+            datasets: [{
+                data: [totalTasks, completedTasks, pendingTasks, urgentTasksCount],
+                backgroundColor: ['#74b9ff', '#00b894', '#fdcb6e', '#e74c3c'],
+                borderWidth: 2,
+                borderC
